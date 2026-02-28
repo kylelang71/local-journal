@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings — Local Journal</title>
+    <meta name="description" content="Configure your Local Journal settings" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+        body { background: var(--color-bg); }
+        .settings-wrap { min-height: 100vh; background: var(--color-bg); }
+        .settings-header-bar { display: flex; align-items: center; padding: 0 var(--sp-3); height: 48px; background: var(--color-panel); border-bottom: 1px solid var(--color-border); }
+        .settings-header-bar__title { font-size: var(--font-size-sm); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-left: var(--sp-2); }
+        .range-row { display: flex; align-items: center; gap: var(--sp-1); }
+        .range-row span { font-size: 11px; color: var(--color-muted); width: 32px; text-align: right; }
+        .success-msg { font-size: 11px; color: #5A7A5E; display: none; }
+        .success-msg.is-visible { display: block; }
+        .error-msg-inline { font-size: 11px; color: #8B3A3A; display: none; }
+        .error-msg-inline.is-visible { display: block; }
+    </style>
+</head>
+
+<body>
+    <div class="settings-wrap">
+        <div class="settings-header-bar">
+            <a href="/" class="toolbar__btn" title="Back to journal" aria-label="Back to journal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#5C3A1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="15 18 9 12 15 6" /></svg>
+            </a>
+            <span class="settings-header-bar__title">Settings</span>
+        </div>
+        <div class="settings-page">
+            <section class="settings-section">
+                <h2 class="settings-section__title">Journal</h2>
+                <div class="form-group">
+                    <label class="input-label" for="journal-path">Journal directory</label>
+                    <input class="input" type="text" id="journal-path" placeholder="~/Journal" />
+                    <div class="success-msg" id="path-success" style="margin-top:4px;">Path updated.</div>
+                    <div class="error-msg-inline" id="path-error" style="margin-top:4px;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="input-label" for="default-sort">Default sort order</label>
+                    <select class="select" id="default-sort">
+                        <option value="modified">Recently modified</option>
+                        <option value="created">Date created</option>
+                        <option value="title-asc">Title A–Z</option>
+                        <option value="title-desc">Title Z–A</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="input-label" for="font-size">Editor font size</label>
+                    <div class="range-row">
+                        <input type="range" class="range" id="font-size" min="12" max="24" step="1" value="16" />
+                        <span id="font-size-value">16px</span>
+                    </div>
+                </div>
+                <button class="btn btn--primary" id="btn-save-general">Save</button>
+                <div class="success-msg" id="general-success" style="margin-top:var(--sp-1);">Settings saved.</div>
+            </section>
+            <section class="settings-section">
+                <h2 class="settings-section__title">Session</h2>
+                <div class="form-group">
+                    <label class="input-label" for="session-duration">Session duration</label>
+                    <select class="select" id="session-duration">
+                        <option value="1">1 hour</option>
+                        <option value="8">8 hours</option>
+                        <option value="24">24 hours (default)</option>
+                        <option value="168">1 week</option>
+                        <option value="87600">Never expire</option>
+                    </select>
+                </div>
+            </section>
+            <section class="settings-section">
+                <h2 class="settings-section__title">Security</h2>
+                <div class="form-group">
+                    <label class="input-label" for="current-password">Current password</label>
+                    <input class="input" type="password" id="current-password" autocomplete="current-password" placeholder="Current password" />
+                </div>
+                <div class="form-group">
+                    <label class="input-label" for="new-password">New password</label>
+                    <input class="input" type="password" id="new-password" autocomplete="new-password" placeholder="New password" />
+                </div>
+                <div class="form-group">
+                    <label class="input-label" for="confirm-password">Confirm new password</label>
+                    <input class="input" type="password" id="confirm-password" autocomplete="new-password" placeholder="Confirm new password" />
+                </div>
+                <button class="btn btn--primary" id="btn-change-password">Change password</button>
+                <div class="success-msg" id="pw-success" style="margin-top:var(--sp-1);">Password changed.</div>
+                <div class="error-msg-inline" id="pw-error" style="margin-top:var(--sp-1);"></div>
+            </section>
+            <section class="settings-section">
+                <h2 class="settings-section__title">Account</h2>
+                <button class="btn" id="btn-logout-settings">Log out</button>
+            </section>
+        </div>
+    </div>
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+    <script src="/js/settings.js"></script>
+</body>
+</html>

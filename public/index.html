@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Local Journal</title>
+    <meta name="description" content="Your private, locally hosted journal" />
+    <link rel="icon" type="image/jpeg" href="/golden-ratio.jpg" />
+    <link rel="apple-touch-icon" href="/golden-ratio.jpg" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/js/tiptap-bundle.js"></script>
+</head>
+
+<body>
+    <div class="app-shell" id="app">
+        <header class="app-header">
+            <div class="app-header__brand">
+                <img src="/golden-ratio.jpg" alt="Local Journal logo"
+                    style="width:18px;height:18px;object-fit:cover;border-radius:2px;" />
+                <span class="app-header__title">Local Journal</span>
+            </div>
+            <div class="app-header__actions">
+                <a href="/settings" class="toolbar__btn" title="Settings" aria-label="Settings">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+                </a>
+                <button id="btn-logout" class="toolbar__btn" title="Log out" aria-label="Log out">
+                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+                </button>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <div class="sidebar__top">
+                <button id="btn-new" class="btn btn--new" title="New entry (⌘N)" aria-label="New entry">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                    New Entry
+                </button>
+                <div class="sidebar__search-wrap">
+                    <span class="sidebar__search-icon">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7A6352" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                    </span>
+                    <input id="search-input" class="sidebar__search" type="search" placeholder="Search entries…" aria-label="Search journal entries" />
+                </div>
+                <select id="sort-select" class="sidebar__sort select" aria-label="Sort order" style="font-size:11px;padding:4px 8px;height:28px;">
+                    <option value="modified">Recently modified</option>
+                    <option value="created">Date created</option>
+                    <option value="title-asc">Title A–Z</option>
+                    <option value="title-desc">Title Z–A</option>
+                </select>
+            </div>
+            <div class="sidebar__entries" id="entry-list" role="list" aria-label="Journal entries">
+                <p class="sidebar__empty">Loading…</p>
+            </div>
+        </aside>
+
+        <main class="editor-area" id="editor-area">
+            <div class="toolbar" id="toolbar" role="toolbar" aria-label="Formatting">
+                <!-- Para style -->
+                <div class="toolbar__dropdown" id="dd-para">
+                    <button class="toolbar__btn" id="btn-para" title="Paragraph style" aria-haspopup="true" aria-expanded="false" style="width:auto;padding:0 8px;font-size:11px;color:var(--color-muted);">
+                        <span id="para-label">Body</span>
+                        <svg style="width:10px;height:10px;margin-left:4px;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" /></svg>
+                    </button>
+                    <div class="toolbar__dropdown-menu is-hidden" id="para-menu" role="menu">
+                        <button class="toolbar__dropdown-item" data-heading="1" role="menuitem">Title</button>
+                        <button class="toolbar__dropdown-item" data-heading="2" role="menuitem">Heading</button>
+                        <button class="toolbar__dropdown-item" data-heading="3" role="menuitem">Subheading</button>
+                        <button class="toolbar__dropdown-item" data-para="body" role="menuitem">Body</button>
+                        <button class="toolbar__dropdown-item" data-para="code" role="menuitem">Monospaced</button>
+                    </div>
+                </div>
+                <div class="toolbar__sep"></div>
+                <button id="btn-bold" class="toolbar__btn" title="Bold (⌘B)" aria-label="Bold"><svg viewBox="0 0 24 24"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" /><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" /></svg></button>
+                <button id="btn-italic" class="toolbar__btn" title="Italic (⌘I)" aria-label="Italic"><svg viewBox="0 0 24 24"><line x1="19" y1="4" x2="10" y2="4" /><line x1="14" y1="20" x2="5" y2="20" /><line x1="15" y1="4" x2="9" y2="20" /></svg></button>
+                <button id="btn-underline" class="toolbar__btn" title="Underline (⌘U)" aria-label="Underline"><svg viewBox="0 0 24 24"><path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3" /><line x1="4" y1="21" x2="20" y2="21" /></svg></button>
+                <button id="btn-strike" class="toolbar__btn" title="Strikethrough" aria-label="Strikethrough">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="12" x2="20" y2="12" />
+                        <path d="M8 8c0-2 1.5-4 4-4s4 1.5 4 3.5" />
+                        <path d="M8 16c0 2 1.5 4 4 4s4-1.5 4-3.5" />
+                    </svg>
+                </button>
+                <div class="toolbar__sep"></div>
+                <div class="toolbar__dropdown" id="dd-highlight">
+                    <button id="btn-highlight" class="toolbar__btn" title="Highlight (⌘⇧H)" aria-label="Highlight" aria-haspopup="true">
+                        <svg viewBox="0 0 24 24"><path d="m9 11-6 6v3h3L22 4" /><path d="m9 11 5.5-5.5" /></svg>
+                    </button>
+                    <div class="toolbar__dropdown-menu is-hidden" id="highlight-menu" role="menu" style="min-width:auto;">
+                        <div class="highlight-picker" style="display:grid;grid-template-columns:repeat(4,24px);gap:6px;padding:10px;">
+                            <button class="highlight-swatch" data-color="#FDE68A" style="background:#FDE68A" title="Yellow" aria-label="Yellow highlight"></button>
+                            <button class="highlight-swatch" data-color="#BBF7D0" style="background:#BBF7D0" title="Green" aria-label="Green highlight"></button>
+                            <button class="highlight-swatch" data-color="#BFDBFE" style="background:#BFDBFE" title="Blue" aria-label="Blue highlight"></button>
+                            <button class="highlight-swatch" data-color="#FBCFE8" style="background:#FBCFE8" title="Pink" aria-label="Pink highlight"></button>
+                            <button class="highlight-swatch" data-color="#FED7AA" style="background:#FED7AA" title="Orange" aria-label="Orange highlight"></button>
+                            <button class="highlight-swatch" data-color="#E9D5FF" style="background:#E9D5FF" title="Lavender" aria-label="Lavender highlight"></button>
+                            <button class="highlight-swatch" data-color="#FECACA" style="background:#FECACA" title="Rose" aria-label="Rose highlight"></button>
+                            <button class="highlight-swatch" data-color="none" style="background:transparent;border-style:dashed;" title="Remove highlight" aria-label="Remove highlight">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7A6352" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="toolbar__dropdown" id="dd-color">
+                    <button id="btn-color" class="toolbar__btn" title="Font color (⌘⇧C)" aria-label="Font Color" aria-haspopup="true">
+                        <svg viewBox="0 0 24 24"><path d="M4 19 L12 4 L20 19" /><line x1="8" y1="14" x2="16" y2="14" /><rect x="3" y="20" width="18" height="2.5" rx="1" fill="currentColor" stroke="none" /></svg>
+                    </button>
+                    <div class="toolbar__dropdown-menu is-hidden" id="color-menu" role="dialog" aria-label="Font color picker" style="min-width:auto;">
+                        <div class="color-picker-wrap">
+                            <div class="color-field" id="color-field"><div class="color-field__gradient-white"></div><div class="color-field__gradient-black"></div><div class="color-field__cursor" id="color-cursor"></div></div>
+                            <input type="range" class="hue-slider" id="hue-slider" min="0" max="360" value="0" aria-label="Hue" />
+                            <div class="hex-input-row">
+                                <div class="hex-preview" id="hex-preview" style="background:#2C1A0E"></div>
+                                <input type="text" class="hex-input input" id="hex-input" value="#2C1A0E" maxlength="7" aria-label="Hex color value" />
+                                <button class="btn" id="btn-apply-color" style="padding:4px 10px;font-size:11px;">Apply</button>
+                            </div>
+                            <button class="toolbar__dropdown-item" id="btn-remove-color" style="font-size:11px;padding:4px 14px;color:var(--color-muted);">Remove color</button>
+                            <div style="padding:0 var(--sp-1) var(--sp-1);">
+                                <div style="font-size:10px;color:var(--color-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;">Recent</div>
+                                <div class="recent-colors" id="recent-colors"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="toolbar__sep"></div>
+                <div class="toolbar__dropdown" id="dd-list">
+                    <button id="btn-list" class="toolbar__btn" title="List" aria-label="Lists" aria-haspopup="true"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg></button>
+                    <div class="toolbar__dropdown-menu is-hidden" id="list-menu" role="menu">
+                        <button class="toolbar__dropdown-item" id="btn-bullet" role="menuitem">Bulleted</button>
+                        <button class="toolbar__dropdown-item" id="btn-dashed" role="menuitem">Dashed</button>
+                        <button class="toolbar__dropdown-item" id="btn-ordered" role="menuitem">Numbered</button>
+                    </div>
+                </div>
+                <button id="btn-blockquote" class="toolbar__btn" title="Block quote (⌘⇧.)" aria-label="Block quote"><svg viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" /><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" /></svg></button>
+                <div class="toolbar__dropdown" id="dd-table">
+                    <button id="btn-table" class="toolbar__btn" title="Insert table" aria-label="Insert table" aria-haspopup="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1" /><path d="M3 9h18" /><path d="M3 15h18" /><path d="M9 3v18" /></svg></button>
+                    <div class="toolbar__dropdown-menu is-hidden" id="table-menu" style="min-width:auto;">
+                        <div class="table-grid" id="table-grid" aria-label="Select table size"></div>
+                        <div class="table-grid__label" id="table-grid-label">–</div>
+                        <div style="border-top:1px solid var(--color-border);padding:4px;">
+                            <button class="toolbar__dropdown-item" id="btn-add-row" style="font-size:11px;">Add row below</button>
+                            <button class="toolbar__dropdown-item" id="btn-del-row" style="font-size:11px;">Delete row</button>
+                            <button class="toolbar__dropdown-item" id="btn-add-col" style="font-size:11px;">Add column right</button>
+                            <button class="toolbar__dropdown-item" id="btn-del-col" style="font-size:11px;">Delete column</button>
+                            <button class="toolbar__dropdown-item" id="btn-del-table" style="font-size:11px;color:#8B3A3A;">Delete table</button>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn-hr" class="toolbar__btn" title="Horizontal rule" aria-label="Horizontal rule"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" /></svg></button>
+                <button id="btn-link" class="toolbar__btn" title="Link (⌘K)" aria-label="Insert link"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg></button>
+                <button id="btn-image" class="toolbar__btn" title="Insert image" aria-label="Insert image"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg></button>
+                <input type="file" id="image-file-input" accept=".jpg,.jpeg,.png,.pdf,.heic" style="display:none" aria-hidden="true" />
+                <div class="toolbar__sep"></div>
+                <button id="btn-undo" class="toolbar__btn" title="Undo (⌘Z)" aria-label="Undo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="7 3 3 7 7 11" />
+                        <path d="M3 7h10a5 5 0 0 1 0 10H5" />
+                    </svg>
+                </button>
+                <button id="btn-redo" class="toolbar__btn" title="Redo (⌘⇧Z)" aria-label="Redo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="17 3 21 7 17 11" />
+                        <path d="M21 7H11a5 5 0 0 0 0 10h8" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="link-dialog is-hidden" id="link-dialog" role="dialog" aria-label="Insert link">
+                <input type="url" class="input" id="link-url-input" placeholder="https://…" style="font-size:12px;padding:4px 8px;" />
+                <button class="btn" id="btn-link-apply" style="padding:4px 10px;font-size:11px;">Apply</button>
+                <button class="btn" id="btn-link-remove" style="padding:4px 10px;font-size:11px;color:var(--color-muted);">Remove</button>
+                <button class="btn" id="btn-link-cancel" style="padding:4px 10px;font-size:11px;">✕</button>
+            </div>
+
+            <div class="editor-canvas-wrap" id="canvas-wrap">
+                <div class="editor-placeholder" id="editor-placeholder">
+                    <p class="editor-placeholder__text">Select an entry from the sidebar,<br>or create a new one.</p>
+                </div>
+                <div class="editor-canvas" id="editor-canvas" style="display:none">
+                    <div id="tiptap-editor"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="status-bar">
+            <div class="status-bar__save">
+                <div class="status-bar__save-icon" id="save-icon"></div>
+                <span id="save-label" style="font-size:11px;color:var(--color-muted);"></span>
+            </div>
+            <div style="font-size:11px;color:var(--color-muted);" id="word-count"></div>
+            <div style="font-size:11px;color:var(--color-muted);" id="version-display">v1.0.0</div>
+        </footer>
+    </div>
+
+    <div class="context-menu is-hidden" id="context-menu" role="menu">
+        <button class="context-menu__item" id="ctx-pin" role="menuitem">Pin entry</button>
+        <button class="context-menu__item" id="ctx-rename" role="menuitem">Rename</button>
+        <button class="context-menu__item context-menu__item--danger" id="ctx-delete" role="menuitem">Delete</button>
+    </div>
+
+    <div class="dialog-overlay is-hidden" id="conflict-overlay">
+        <div class="dialog" role="alertdialog" aria-labelledby="conflict-title">
+            <h2 class="dialog__title" id="conflict-title">File changed externally</h2>
+            <p class="dialog__message">This entry was modified outside of Local Journal. What would you like to do?</p>
+            <div class="dialog__actions">
+                <button class="btn" id="conflict-reload">Reload from disk</button>
+                <button class="btn" id="conflict-overwrite">Keep my changes</button>
+                <button class="btn" id="conflict-new">Save as new entry</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="/js/editor.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

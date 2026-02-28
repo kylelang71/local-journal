@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Journal — Unlock</title>
+  <meta name="description" content="Sign in to your private Local Journal" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <main class="login-page">
+    <div class="login-card">
+      <div class="login-card__brand">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5C3A1E" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="11" width="14" height="10" rx="1"/>
+          <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+        </svg>
+        <h1 class="login-card__title">Local Journal</h1>
+        <p class="login-card__subtitle" id="subtitle">Enter your password to continue.</p>
+      </div>
+      <div class="login-card__error" id="error-msg" role="alert"></div>
+      <form id="setup-form" style="display:none">
+        <div class="form-group">
+          <label class="input-label" for="setup-password">Create a password</label>
+          <input class="input" type="password" id="setup-password" name="password" autocomplete="new-password" placeholder="Choose a password" required />
+        </div>
+        <div class="form-group">
+          <label class="input-label" for="setup-confirm">Confirm password</label>
+          <input class="input" type="password" id="setup-confirm" name="confirm" autocomplete="new-password" placeholder="Confirm password" required />
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%">Set Password</button>
+      </form>
+      <form id="login-form">
+        <div class="form-group">
+          <label class="input-label" for="login-password">Password</label>
+          <input class="input" type="password" id="login-password" name="password" autocomplete="current-password" placeholder="Enter password" required autofocus />
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%">Unlock</button>
+      </form>
+    </div>
+  </main>
+  <script src="/js/login.js"></script>
+</body>
+</html>
